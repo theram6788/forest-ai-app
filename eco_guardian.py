@@ -1,4 +1,4 @@
-# eco_guardian_quantum_ai.py
+# eco_guardian_quantum_ai_v2.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -10,7 +10,7 @@ import random
 
 # Page configuration - Ultimate MAX Level
 st.set_page_config(
-    page_title="EcoGuardian AI Command", 
+    page_title="EcoGuardian AI v2.0", 
     page_icon="🔥🌍",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -35,7 +35,7 @@ if (current_time - st.session_state.last_refresh).seconds > 30:
 
 st.sidebar.info(f"🕒 Last refresh: {st.session_state.last_refresh.strftime('%H:%M:%S')}")
 
-# Ultimate MAX Custom CSS (same as before)
+# Ultimate MAX Custom CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -191,6 +191,20 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         text-shadow: 0 0 20px rgba(0,255,255,0.5);
     }
+    
+    .rain-card {
+        background: linear-gradient(135deg, #00B4DB 0%, #0083B0 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        color: white;
+        box-shadow: 0 8px 40px rgba(0,180,219,0.6);
+        animation: rainGlow 2s infinite;
+    }
+    
+    @keyframes rainGlow {
+        0%, 100% { box-shadow: 0 8px 40px rgba(0,180,219,0.6); }
+        50% { box-shadow: 0 8px 60px rgba(0,180,219,0.9); }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -210,9 +224,11 @@ if 'deployed_drones' not in st.session_state:
 if 'evacuation_status' not in st.session_state:
     st.session_state.evacuation_status = "STANDBY"
 if 'temperature' not in st.session_state:
-    st.session_state.temperature = 42.5
+    st.session_state.temperature = 41.5  # UPDATED TEMPERATURE
 if 'humidity' not in st.session_state:
     st.session_state.humidity = 18
+if 'rain_activated' not in st.session_state:
+    st.session_state.rain_activated = False
 
 # Function to update real-time metrics with realistic variations
 def update_metrics():
@@ -221,16 +237,22 @@ def update_metrics():
     st.session_state.network_speed = max(0.8, min(2.5, st.session_state.network_speed + random.uniform(-0.2, 0.2)))
     st.session_state.memory_usage = max(45, min(80, st.session_state.memory_usage + random.uniform(-4, 4)))
     st.session_state.active_alerts = max(5, min(12, st.session_state.active_alerts + random.randint(-1, 1)))
-    st.session_state.temperature = max(38, min(46, st.session_state.temperature + random.uniform(-0.5, 0.5)))
-    st.session_state.humidity = max(15, min(25, st.session_state.humidity + random.uniform(-1, 1)))
+    
+    # If rain is activated, gradually normalize temperature and humidity
+    if st.session_state.rain_activated:
+        st.session_state.temperature = max(30, st.session_state.temperature - 0.1)
+        st.session_state.humidity = min(80, st.session_state.humidity + 0.5)
+    else:
+        st.session_state.temperature = max(38, min(46, st.session_state.temperature + random.uniform(-0.3, 0.3)))
+        st.session_state.humidity = max(15, min(25, st.session_state.humidity + random.uniform(-0.5, 0.5)))
 
 # Update metrics on each refresh
 update_metrics()
 
-# ULTIMATE HEADER
+# ULTIMATE HEADER - V2.0 TITLE
 st.markdown('<div class="matrix-bg">', unsafe_allow_html=True)
-st.markdown('<h1 class="main-header">🚀 ECOGUARDIAN QUANTUM AI</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">QUANTUM NEURAL NETWORK • REAL-TIME THREAT RESPONSE • GLOBAL PROTECTION SYSTEM</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">🚀 ECOGUARDIAN QUANTUM AI v2.0</h1>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">ADVANCED FOREST PROTECTION SYSTEM • REAL-TIME AI MONITORING</p>', unsafe_allow_html=True)
 
 # CYBERPUNK SIDEBAR - COMMAND CENTER
 with st.sidebar:
@@ -278,17 +300,19 @@ with st.sidebar:
     
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Emergency Protocols
+    # NEW: SYSTEM DIAGNOSTICS
     st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("**🚨 PROTOCOL SYSTEMS**")
+    st.markdown("**🔧 SYSTEM DIAGNOSTICS**")
     
-    protocol_status = st.selectbox("ACTIVE PROTOCOL", 
-                                  ["ALPHA - MONITOR", "BETA - ALERT", "GAMMA - RESPONSE", "OMEGA - CRITICAL"])
-    
-    if st.button("🔄 UPDATE ALL SYSTEMS", use_container_width=True):
-        update_metrics()
-        st.success("✅ All systems updated with latest telemetry!")
-        st.rerun()
+    if st.button("🔄 RUN SYSTEM CHECK", use_container_width=True):
+        st.info("""
+        🔧 SYSTEM STATUS REPORT:
+        • AI Models: ✅ Operational
+        • Satellite Feed: ✅ Online
+        • Environmental Sensors: ✅ Active
+        • Network: ✅ Stable (98.7% uptime)
+        • Emergency Protocols: ✅ Ready
+        """)
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -326,6 +350,59 @@ with col4:
     st.markdown(f'<div class="stat-number">247</div>', unsafe_allow_html=True)
     st.metric("LIVES SAVED", "15,682", "+238")
     st.markdown("**This Year**")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# NEW: ARTIFICIAL RAIN CONTROL SYSTEM
+st.markdown("---")
+st.markdown("## 🌧️ ARTIFICIAL RAIN CONTROL SYSTEM")
+
+rain_col1, rain_col2 = st.columns([2, 1])
+
+with rain_col1:
+    st.markdown('<div class="rain-card">', unsafe_allow_html=True)
+    st.markdown("### 💧 WEATHER MODIFICATION SYSTEM")
+    
+    if st.session_state.rain_activated:
+        st.success("**✅ ARTIFICIAL RAIN ACTIVE**")
+        st.metric("Temperature Effect", f"-{41.5 - st.session_state.temperature:.1f}°C")
+        st.metric("Humidity Effect", f"+{st.session_state.humidity - 18:.1f}%")
+        
+        if st.button("🛑 STOP RAIN SYSTEM", use_container_width=True):
+            st.session_state.rain_activated = False
+            st.session_state.temperature = 41.5
+            st.session_state.humidity = 18
+            st.rerun()
+    else:
+        if st.button("🌧️ ACTIVATE ARTIFICIAL RAIN", use_container_width=True):
+            st.session_state.rain_activated = True
+            st.success("✅ Artificial rain system activated! Deploying cloud seeding drones...")
+            st.rerun()
+    
+    st.markdown("""
+    **SYSTEM CAPABILITIES:**
+    • Cloud Seeding Drones
+    • Temperature Reduction: Up to 8°C
+    • Humidity Increase: Up to 35%
+    • Fire Risk Reduction: 45-60%
+    """)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with rain_col2:
+    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
+    st.markdown("### 📊 RAIN SYSTEM STATUS")
+    
+    status = "🟢 ACTIVE" if st.session_state.rain_activated else "🔴 STANDBY"
+    st.metric("System Status", status)
+    
+    if st.session_state.rain_activated:
+        st.metric("Drones Deployed", "12", "4 en route")
+        st.metric("Cloud Coverage", "78%", "+12%")
+        st.progress(0.78)
+    else:
+        st.metric("Drones Ready", "16", "All systems")
+        st.metric("Cloud Coverage", "22%", "Natural")
+        st.progress(0.22)
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 # CRITICAL THREAT MATRIX - ULTIMATE VERSION
@@ -366,6 +443,14 @@ with threat_col1:
 with threat_col2:
     st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
     st.markdown("### 🌡️ QUANTUM ENVIRONMENT SENSORS")
+    
+    # NEW ARTIFICIAL RAIN BUTTON
+    if st.button("🌧️ QUICK RAIN DEPLOYMENT", use_container_width=True, key="quick_rain"):
+        st.session_state.rain_activated = True
+        st.session_state.temperature = 36.0
+        st.session_state.humidity = 45
+        st.success("🚁 Emergency rain drones deployed! Immediate climate modification activated!")
+        st.rerun()
     
     # Real-time Environmental Gauges
     gauge_col1, gauge_col2 = st.columns(2)
@@ -631,9 +716,9 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; font-family: "Exo 2", sans-serif;'>
     <h3 style='background: linear-gradient(90deg, #00FFFF, #FF00FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>
-        🚀 ECOGUARDIAN QUANTUM AI COMMAND SYSTEM
+        🚀 ECOGUARDIAN QUANTUM AI v2.0
     </h3>
-    <p style='color: #888; letter-spacing: 2px;'>PROTECTING TOMORROW, TODAY</p>
+    <p style='color: #888; letter-spacing: 2px;'>ADVANCED FOREST PROTECTION SYSTEM</p>
     <p style='color: #666; font-size: 0.8rem;'>© 2025 EcoGuardian Quantum Systems | Neural Network v4.2.1 | All Systems Operational</p>
 </div>
 """, unsafe_allow_html=True)
