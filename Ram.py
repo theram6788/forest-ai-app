@@ -565,7 +565,7 @@ with contact_col3:
 
 with contact_col4:
     st.markdown("""
-    <a href="https://drive.google.com/your-resume-link" target="_blank" style="text-decoration: none;">
+    <a href="https://drive.google.com/file/d/1o8kKOavvjZecRvUyTTaoZ1siz8MnL0AA/view?usp=drive_link">
     <div class="contact-shield">
         <h4>📄 Resume</h4>
         <p>Google Drive</p>
