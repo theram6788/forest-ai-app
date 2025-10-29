@@ -238,8 +238,7 @@ with col1:
         st.image("Ram.jpg", 
                  width=280, 
                  caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
-  except:
-    # Fallback
+ except:
     st.image("https://via.placeholder.com/300x300/0083B0/FFFFFF?text=RAM+MISHRA", 
              width=280, 
              caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
