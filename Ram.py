@@ -238,10 +238,11 @@ with col1:
         st.image("Ram.jpg", 
                  width=280, 
                  caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
-    except:
-        st.image("https://via.placeholder.com/300x300/0083B0/FFFFFF?text=RAM+MISHRA", 
-                 width=280, 
-                 caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
+  except:
+    # Fallback
+    st.image("https://via.placeholder.com/300x300/0083B0/FFFFFF?text=RAM+MISHRA", 
+             width=280, 
+             caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
 
 with col2:
     st.markdown('<h1 class="cyber-main-header">🛡️ RAM LALIT MISHRA</h1>', unsafe_allow_html=True)
