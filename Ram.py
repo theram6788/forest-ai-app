@@ -236,7 +236,7 @@ col1, col2 = st.columns([1, 2])
 with col1:
     # GitHub se photo load karo - CORRECT URL
     try:
-        photo_url = "https://raw.githubusercontent.com/theram6788/forest-ai-app/main/Ram.jpg"
+        photo_url = "https://avatars.githubusercontent.com/u/238850261?v=4"
         st.image(photo_url, 
                  width=280, 
                  caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
