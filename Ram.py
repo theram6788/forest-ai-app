@@ -1,20 +1,16 @@
-# ram_cybersecurity_portfolio_final.py
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 from datetime import datetime
-
-# Page Configuration - Ultimate Cyber Theme
 st.set_page_config(
     page_title="Ram Lalit Mishra - Cybersecurity Portfolio",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
-# Ultimate Cyber Security CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -221,27 +217,21 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state
 if 'visit_count' not in st.session_state:
     st.session_state.visit_count = 0
 st.session_state.visit_count += 98291
 
-# MAIN HEADER - ULTIMATE CYBER THEME
 st.markdown('<div class="matrix-bg">', unsafe_allow_html=True)
 
-# Hero Section
-# Hero Section
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    # GitHub se photo load karo - CORRECT URL
     try:
         photo_url = "https://avatars.githubusercontent.com/u/238850261?v=4"
         st.image(photo_url, 
                  width=280, 
                  caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
     except:
-        # Fallback
         st.image("https://via.placeholder.com/300x300/0083B0/FFFFFF?text=RAM+MISHRA", 
                  width=280, 
                  caption="🛡️ Ram Lalit Mishra - Cybersecurity Protector")
@@ -249,8 +239,7 @@ with col1:
 with col2:
     st.markdown('<h1 class="cyber-main-header">🛡️ RAM LALIT MISHRA</h1>', unsafe_allow_html=True)
     st.markdown('<p class="cyber-sub-header">CYBERSECURITY ENTHUSIAST | PYTHON DEVELOPER | ETHICAL HACKER</p>', unsafe_allow_html=True)
-    
-    # Cyber Stats Row
+
     stats_col1, stats_col2, stats_col3, stats_col4 = st.columns(4)
     
     with stats_col1:
@@ -287,7 +276,6 @@ with col2:
         </div>
         """, unsafe_allow_html=True)
 
-# Mission Statement
 st.markdown("""
 <div class="hacker-card">
 <h3>🎯 CYBER MISSION STATEMENT</h3>
@@ -296,7 +284,6 @@ one vulnerability at a time. I believe in ethical hacking, continuous learning, 
 </div>
 """, unsafe_allow_html=True)
 
-# ABOUT ME SECTION
 st.markdown("---")
 st.markdown("## 🛡️ ABOUT THE CYBER PROTECTOR")
 
@@ -336,7 +323,6 @@ with about_col2:
     </div>
     """, unsafe_allow_html=True)
 
-# SKILLS & EXPERTISE
 st.markdown("---")
 st.markdown("## 💡 CYBERSECURITY SKILL MATRIX")
 
@@ -371,7 +357,6 @@ fig_radar.update_layout(
 
 st.plotly_chart(fig_radar, use_container_width=True)
 
-# TECH STACK
 st.markdown("### 🔧 CYBER TECH ARSENAL")
 tech_cols = st.columns(6)
 tech_stack = ["🐍 Python", "🐧 Linux", "🌐 Streamlit", "💻 HTML/CSS/JS", "🔗 Git & GitHub", "⚡ VS Code"]
@@ -384,7 +369,6 @@ for i, tech in enumerate(tech_stack):
         </div>
         """, unsafe_allow_html=True)
 
-# PROJECTS SHOWCASE WITH LINKS
 st.markdown("---")
 st.markdown("## 🚀 CYBER PROJECTS SHOWCASE")
 
@@ -438,7 +422,6 @@ with project_col3:
     </a>
     """, unsafe_allow_html=True)
 
-# TRYHACKME PROGRESS
 st.markdown("---")
 st.markdown("## 🛡️ TRYHACKME CYBER DOJO")
 
@@ -482,7 +465,6 @@ with thm_col4:
     </div>
     """, unsafe_allow_html=True)
 
-# FUTURE GOALS
 st.markdown("---")
 st.markdown("## 🎯 CYBER ROADMAP 2024-2025")
 
@@ -521,7 +503,6 @@ with goal_col3:
     </div>
     """, unsafe_allow_html=True)
 
-# CONTACT SECTION WITH LINKS
 st.markdown("---")
 st.markdown("## 📞 CYBER COMMAND CENTER")
 
@@ -570,12 +551,11 @@ with contact_col4:
         <h4>📄 Resume</h4>
         <p>Google Drive</p>
         <p><em>Detailed CV</em></p>
-        <p><small>🔗 Click to download</small></p>
+        <p><small>🔗 Click to view</small></p>
     </div>
     </a>
     """, unsafe_allow_html=True)
 
-# FINAL FOOTER
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #00FFFF; font-family: "Orbitron", sans-serif;'>
