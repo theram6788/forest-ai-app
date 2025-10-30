@@ -466,7 +466,7 @@ with thm_col4:
     """, unsafe_allow_html=True)
 
 st.markdown("---")
-st.markdown("## 🎯 CYBER ROADMAP 2024-2025")
+st.markdown("## 🎯 CYBER ROADMAP 2025-2026")
 
 goal_col1, goal_col2, goal_col3 = st.columns(3)
 
@@ -562,7 +562,7 @@ st.markdown("""
     <h3>🛡️ SECURING THE DIGITAL FUTURE</h3>
     <p><em>"The only truly secure system is one that is powered off, cast in a block of concrete, 
     and sealed in a lead-lined room with armed guards - and even then I have my doubts." - Gene Spafford</em></p>
-    <p style='color: #666; margin-top: 2rem;'>Built with 🐍 Python & ❤️ Passion | Ram Lalit Mishra © 2024</p>
+    <p style='color: #666; margin-top: 2rem;'>Built with 🐍 Python & ❤️ Passion | Ram Lalit Mishra © 2025</p>
 </div>
 """, unsafe_allow_html=True)
 
