@@ -376,7 +376,7 @@ project_col1, project_col2, project_col3 = st.columns(3)
 
 with project_col1:
     st.markdown("""
-    <a href="https//eco-ai.streamlit.app" target="_blank" style="text-decoration: none;">
+    <a href="https://eco-ai.streamlit.app" target="_blank" style="text-decoration: none;">
     <div class="project-shield">
         <h3>🔥 EcoGuardian AI</h3>
         <p><strong>AI-Powered Forest Fire Detection</strong></p>
