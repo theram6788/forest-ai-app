@@ -1,4 +1,4 @@
-# eco_guardian_quantum_ai_v2.py
+# forest_ai_advanced.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -8,723 +8,325 @@ from datetime import datetime, timedelta
 import time
 import random
 
-# Page configuration - Ultimate MAX Level
 st.set_page_config(
-    page_title="EcoGuardian AI v2.0", 
-    page_icon="🔥🌍",
+    page_title="EcoGuardian AI Pro",
+    page_icon="🌲",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Manual Auto-refresh system
-if 'refresh_counter' not in st.session_state:
-    st.session_state.refresh_counter = 0
-    st.session_state.last_refresh = datetime.now()
-
-# Auto-refresh button
-if st.sidebar.button("🔄 MANUAL REFRESH DATA"):
-    st.session_state.refresh_counter += 1
-    st.rerun()
-
-# Auto refresh every 30 seconds
-current_time = datetime.now()
-if (current_time - st.session_state.last_refresh).seconds > 30:
-    st.session_state.refresh_counter += 1
-    st.session_state.last_refresh = current_time
-    st.rerun()
-
-st.sidebar.info(f"🕒 Last refresh: {st.session_state.last_refresh.strftime('%H:%M:%S')}")
-
-# Ultimate MAX Custom CSS
+# Advanced Cyber Forest Theme
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@100;200;300;400;500;600;700;800;900&display=swap');
-    
-    .main-header {
-        font-family: 'Exo 2', sans-serif;
-        font-size: 4.5rem;
-        background: linear-gradient(90deg, #FF0080, #FF8C00, #40E0D0, #20B2AA, #9370DB);
+    .cyber-main-header {
+        font-family: 'Arial Black', sans-serif;
+        font-size: 4rem;
+        background: linear-gradient(90deg, #00FF87, #00D4FF, #FF0080);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-align: center;
         font-weight: 900;
         margin-bottom: 0;
-        text-shadow: 0 0 40px rgba(255,0,128,0.5);
-        animation: rainbow_glow 3s ease-in-out infinite;
-        letter-spacing: 3px;
+        text-shadow: 0 0 30px rgba(0,255,135,0.3);
+        animation: cyberGlow 3s ease-in-out infinite;
     }
     
-    @keyframes rainbow_glow {
-        0% { text-shadow: 0 0 30px rgba(255,0,128,0.6), 0 0 60px rgba(255,140,0,0.4); }
-        25% { text-shadow: 0 0 30px rgba(255,140,0,0.6), 0 0 60px rgba(64,224,208,0.4); }
-        50% { text-shadow: 0 0 30px rgba(64,224,208,0.6), 0 0 60px rgba(32,178,170,0.4); }
-        75% { text-shadow: 0 0 30px rgba(32,178,170,0.6), 0 0 60px rgba(147,112,219,0.4); }
-        100% { text-shadow: 0 0 30px rgba(147,112,219,0.6), 0 0 60px rgba(255,0,128,0.4); }
+    @keyframes cyberGlow {
+        0% { text-shadow: 0 0 20px rgba(0,255,135,0.3); }
+        50% { text-shadow: 0 0 40px rgba(0,212,255,0.6); }
+        100% { text-shadow: 0 0 20px rgba(0,255,135,0.3); }
     }
     
-    .sub-header {
-        font-family: 'Rajdhani', sans-serif;
-        text-align: center;
-        color: #00FFFF;
-        font-size: 1.6rem;
-        font-weight: 600;
-        letter-spacing: 3px;
-        margin-bottom: 2rem;
-        text-shadow: 0 0 10px rgba(0,255,255,0.7);
-    }
-    
-    .hologram-card {
-        background: linear-gradient(135deg, rgba(30,30,60,0.95) 0%, rgba(10,10,30,0.95) 100%);
-        border: 1px solid #00FFFF;
+    .cyber-card {
+        background: linear-gradient(135deg, rgba(10,25,47,0.95) 0%, rgba(20,40,70,0.95) 100%);
+        border: 2px solid #00FF87;
         border-radius: 20px;
         padding: 2rem;
         color: white;
-        box-shadow: 0 8px 40px rgba(0,255,255,0.4);
+        box-shadow: 0 8px 40px rgba(0,255,135,0.3);
         backdrop-filter: blur(15px);
+        margin: 1rem 0;
         transition: all 0.4s ease;
-        position: relative;
-        overflow: hidden;
     }
     
-    .hologram-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent);
-        transition: 0.5s;
+    .cyber-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 50px rgba(0,255,135,0.5);
+        border-color: #00D4FF;
     }
     
-    .hologram-card:hover::before {
-        left: 100%;
-    }
-    
-    .hologram-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(0,255,255,0.6);
-    }
-    
-    .critical-hologram {
+    .critical-alert {
         background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
-        border: 2px solid #FF0000;
+        border: 3px solid #FF0000;
         border-radius: 20px;
         padding: 2rem;
         color: white;
-        animation: criticalFlash 1s infinite, float 3s ease-in-out infinite;
-        box-shadow: 0 0 50px rgba(255,0,0,0.7);
-        position: relative;
+        animation: pulse 2s infinite;
+        box-shadow: 0 0 50px rgba(255,0,0,0.6);
     }
     
-    @keyframes criticalFlash {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.8; }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
     }
     
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-5px); }
-    }
-    
-    .quantum-button {
+    .metric-box {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        border-radius: 30px;
-        padding: 15px 35px;
+        border-radius: 15px;
+        padding: 1.5rem;
         color: white;
-        font-family: 'Exo 2', sans-serif;
-        font-weight: 700;
-        font-size: 1.1rem;
-        cursor: pointer;
+        text-align: center;
+        margin: 0.5rem;
         transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(102,126,234,0.5);
-        position: relative;
-        overflow: hidden;
     }
     
-    .quantum-button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: 0.5s;
-    }
-    
-    .quantum-button:hover::before {
-        left: 100%;
-    }
-    
-    .quantum-button:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 10px 30px rgba(102,126,234,0.7);
-    }
-    
-    .success-hologram {
-        background: linear-gradient(135deg, #00F260 0%, #0575E6 100%);
-        border-radius: 20px;
-        padding: 2rem;
-        color: white;
-        box-shadow: 0 8px 40px rgba(0,242,96,0.5);
-        animation: successPulse 2s infinite;
-    }
-    
-    @keyframes successPulse {
-        0% { box-shadow: 0 8px 40px rgba(0,242,96,0.5); }
-        50% { box-shadow: 0 8px 60px rgba(0,242,96,0.8); }
-        100% { box-shadow: 0 8px 40px rgba(0,242,96,0.5); }
-    }
-    
-    .matrix-bg {
-        background: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    .metric-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(102,126,234,0.6);
     }
     
     .stat-number {
-        font-family: 'Orbitron', sans-serif;
+        font-family: 'Courier New', monospace;
         font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #00FFFF, #FF00FF);
+        font-weight: 900;
+        background: linear-gradient(90deg, #00FF87, #00D4FF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 20px rgba(0,255,255,0.5);
     }
     
-    .rain-card {
-        background: linear-gradient(135deg, #00B4DB 0%, #0083B0 100%);
-        border-radius: 20px;
-        padding: 2rem;
-        color: white;
-        box-shadow: 0 8px 40px rgba(0,180,219,0.6);
-        animation: rainGlow 2s infinite;
-    }
-    
-    @keyframes rainGlow {
-        0%, 100% { box-shadow: 0 8px 40px rgba(0,180,219,0.6); }
-        50% { box-shadow: 0 8px 60px rgba(0,180,219,0.9); }
+    .forest-bg {
+        background: linear-gradient(180deg, #0a1929 0%, #1a2b3c 50%, #0a1929 100%);
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Initialize session state for real-time data
-if 'cpu_usage' not in st.session_state:
-    st.session_state.cpu_usage = 45
-if 'network_speed' not in st.session_state:
-    st.session_state.network_speed = 1.2
-if 'memory_usage' not in st.session_state:
-    st.session_state.memory_usage = 62
-if 'active_alerts' not in st.session_state:
-    st.session_state.active_alerts = 8
-if 'system_status' not in st.session_state:
-    st.session_state.system_status = "OPERATIONAL"
-if 'deployed_drones' not in st.session_state:
-    st.session_state.deployed_drones = 0
-if 'evacuation_status' not in st.session_state:
-    st.session_state.evacuation_status = "STANDBY"
-if 'temperature' not in st.session_state:
-    st.session_state.temperature = 41.5  # UPDATED TEMPERATURE
-if 'humidity' not in st.session_state:
-    st.session_state.humidity = 18
-if 'rain_activated' not in st.session_state:
-    st.session_state.rain_activated = False
+# Initialize session state
+if 'forest_data' not in st.session_state:
+    st.session_state.forest_data = {
+        'temperature': 42.5,
+        'humidity': 18,
+        'fire_risk': 94,
+        'drones_active': 12,
+        'satellites_linked': 8
+    }
 
-# Function to update real-time metrics with realistic variations
-def update_metrics():
-    # Update with realistic random variations
-    st.session_state.cpu_usage = max(25, min(85, st.session_state.cpu_usage + random.uniform(-5, 5)))
-    st.session_state.network_speed = max(0.8, min(2.5, st.session_state.network_speed + random.uniform(-0.2, 0.2)))
-    st.session_state.memory_usage = max(45, min(80, st.session_state.memory_usage + random.uniform(-4, 4)))
-    st.session_state.active_alerts = max(5, min(12, st.session_state.active_alerts + random.randint(-1, 1)))
-    
-    # If rain is activated, gradually normalize temperature and humidity
-    if st.session_state.rain_activated:
-        st.session_state.temperature = max(30, st.session_state.temperature - 0.1)
-        st.session_state.humidity = min(80, st.session_state.humidity + 0.5)
-    else:
-        st.session_state.temperature = max(38, min(46, st.session_state.temperature + random.uniform(-0.3, 0.3)))
-        st.session_state.humidity = max(15, min(25, st.session_state.humidity + random.uniform(-0.5, 0.5)))
+# Auto-update function
+def update_forest_data():
+    st.session_state.forest_data['temperature'] = max(38, min(46, 
+        st.session_state.forest_data['temperature'] + random.uniform(-0.5, 0.5)))
+    st.session_state.forest_data['humidity'] = max(15, min(25, 
+        st.session_state.forest_data['humidity'] + random.uniform(-1, 1)))
+    st.session_state.forest_data['fire_risk'] = max(85, min(98, 
+        st.session_state.forest_data['fire_risk'] + random.randint(-2, 2)))
 
-# Update metrics on each refresh
-update_metrics()
+update_forest_data()
 
-# ULTIMATE HEADER - V2.0 TITLE
-st.markdown('<div class="matrix-bg">', unsafe_allow_html=True)
-st.markdown('<h1 class="main-header">🚀 ECOGUARDIAN QUANTUM AI v2.0</h1>', unsafe_allow_html=True)
-st.markdown('<p class="sub-header">ADVANCED FOREST PROTECTION SYSTEM • REAL-TIME AI MONITORING</p>', unsafe_allow_html=True)
+# MAIN INTERFACE
+st.markdown('<div class="forest-bg">', unsafe_allow_html=True)
 
-# CYBERPUNK SIDEBAR - COMMAND CENTER
-with st.sidebar:
-    st.markdown("### 🎛️ QUANTUM COMMAND CENTER")
-    
-    # Real-time System Monitoring
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("**⚡ LIVE SYSTEM TELEMETRY**")
-    
-    # Animated CPU Usage
-    cpu_col1, cpu_col2 = st.columns([2, 1])
-    with cpu_col1:
-        st.markdown(f'<div class="stat-number">{st.session_state.cpu_usage:.1f}%</div>', unsafe_allow_html=True)
-        st.progress(st.session_state.cpu_usage/100)
-    with cpu_col2:
-        cpu_change = random.uniform(-3, 3)
-        st.metric("CPU", f"{st.session_state.cpu_usage:.1f}%", f"{cpu_change:+.1f}%")
-    
-    # Network Speed with animation
-    net_col1, net_col2 = st.columns([2, 1])
-    with net_col1:
-        st.markdown(f'<div class="stat-number">{st.session_state.network_speed:.1f} Gbps</div>', unsafe_allow_html=True)
-        st.progress(st.session_state.network_speed/3.0)
-    with net_col2:
-        net_change = random.uniform(-0.2, 0.2)
-        st.metric("NETWORK", f"{st.session_state.network_speed:.1f}G", f"{net_change:+.1f}G")
-    
-    mem_change = random.uniform(-4, 4)
-    st.metric("MEMORY", f"{st.session_state.memory_usage:.1f}%", f"{mem_change:+.1f}%")
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # AI Control Matrix
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("**🤖 QUANTUM AI MATRIX**")
-    
-    ai_mode = st.selectbox("NEURAL MODE", 
-                          ["SENTINEL PROTOCOL", "PREDICTIVE ANALYSIS", "THREAT RESPONSE", "QUANTUM SCAN"])
-    
-    scan_intensity = st.slider("SCAN INTENSITY", 1, 100, 75)
-    threat_threshold = st.slider("THREAT THRESHOLD", 1, 100, 65)
-    
-    if st.button("🔮 ACTIVATE QUANTUM SCAN", use_container_width=True):
-        st.session_state.quantum_scan = True
-        st.success("🌀 Quantum Field Activated! Scanning for thermal anomalies...")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # NEW: SYSTEM DIAGNOSTICS
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("**🔧 SYSTEM DIAGNOSTICS**")
-    
-    if st.button("🔄 RUN SYSTEM CHECK", use_container_width=True):
-        st.info("""
-        🔧 SYSTEM STATUS REPORT:
-        • AI Models: ✅ Operational
-        • Satellite Feed: ✅ Online
-        • Environmental Sensors: ✅ Active
-        • Network: ✅ Stable (98.7% uptime)
-        • Emergency Protocols: ✅ Ready
-        """)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+# Header Section
+st.markdown('<h1 class="cyber-main-header">🌲 ECOGUARDIAN AI PRO</h1>', unsafe_allow_html=True)
+st.markdown('<p style="text-align: center; color: #00D4FF; font-size: 1.4rem; margin-bottom: 2rem;">Advanced Neural Network for Forest Fire Prevention & Protection</p>', unsafe_allow_html=True)
 
-# MAIN DASHBOARD - QUANTUM GRID
-col1, col2, col3, col4 = st.columns(4)
+# Real-time Metrics Dashboard
+col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("**🌍 GLOBAL COVERAGE**")
-    st.markdown(f'<div class="stat-number">94.7%</div>', unsafe_allow_html=True)
-    st.progress(0.947)
-    st.metric("SATELLITES", "12/12", "3 Focused")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="metric-box">
+        <h3>🌡️ TEMPERATURE</h3>
+        <div class="stat-number">{st.session_state.forest_data['temperature']:.1f}°C</div>
+        <p>Real-time Thermal Data</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("**🚨 ACTIVE THREATS**")
-    st.markdown(f'<div class="stat-number">{st.session_state.active_alerts}</div>', unsafe_allow_html=True)
-    alert_change = random.randint(-1, 1)
-    st.metric("CRITICAL", "3", f"{alert_change:+d}")
-    st.markdown("**Bandipur • Sundarbans • Simlipal**")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="metric-box">
+        <h3>💧 HUMIDITY</h3>
+        <div class="stat-number">{st.session_state.forest_data['humidity']:.1f}%</div>
+        <p>Atmospheric Moisture</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col3:
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("**🤖 AI INTELLIGENCE**")
-    st.markdown(f'<div class="stat-number">98.3%</div>', unsafe_allow_html=True)
-    st.progress(0.983)
-    st.metric("ACCURACY", "99.1%", "+0.2%")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="metric-box">
+        <h3>🔥 FIRE RISK</h3>
+        <div class="stat-number">{st.session_state.forest_data['fire_risk']}%</div>
+        <p>AI Prediction Confidence</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 with col4:
-    st.markdown('<div class="success-hologram">', unsafe_allow_html=True)
-    st.markdown("**✅ MISSION SUCCESS**")
-    st.markdown(f'<div class="stat-number">247</div>', unsafe_allow_html=True)
-    st.metric("LIVES SAVED", "15,682", "+238")
-    st.markdown("**This Year**")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="metric-box">
+        <h3>🛸 ACTIVE DRONES</h3>
+        <div class="stat-number">{st.session_state.forest_data['drones_active']}</div>
+        <p>Aerial Surveillance</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-# NEW: ARTIFICIAL RAIN CONTROL SYSTEM
-st.markdown("---")
-st.markdown("## 🌧️ ARTIFICIAL RAIN CONTROL SYSTEM")
+with col5:
+    st.markdown(f"""
+    <div class="metric-box">
+        <h3>🛰️ SATELLITES</h3>
+        <div class="stat-number">{st.session_state.forest_data['satellites_linked']}/12</div>
+        <p>Orbital Monitoring</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-rain_col1, rain_col2 = st.columns([2, 1])
+# Critical Alert System
+st.markdown("""
+<div class="critical-alert">
+    <h2 style="text-align: center; margin-bottom: 1rem;">🚨 CRITICAL FIRE ALERT</h2>
+    <div style="text-align: center;">
+        <h3>🌲 BANDIPUR NATIONAL PARK - KARNATAKA</h3>
+        <p style="font-size: 1.2rem;">AI Neural Network detects 94% probability of wildfire ignition within 2-4 hours</p>
+        <p><strong>IMMEDIATE ACTION REQUIRED:</strong> Evacuation protocols activated | Fire departments alerted | Drones deployed</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-with rain_col1:
-    st.markdown('<div class="rain-card">', unsafe_allow_html=True)
-    st.markdown("### 💧 WEATHER MODIFICATION SYSTEM")
-    
-    if st.session_state.rain_activated:
-        st.success("**✅ ARTIFICIAL RAIN ACTIVE**")
-        st.metric("Temperature Effect", f"-{41.5 - st.session_state.temperature:.1f}°C")
-        st.metric("Humidity Effect", f"+{st.session_state.humidity - 18:.1f}%")
+# Main Dashboard
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("""
+    <div class="cyber-card">
+        <h2>🛰️ LIVE SATELLITE MONITORING</h2>
+        <p><strong>Coverage Area:</strong> 15,600 sq km of protected forests</p>
+        <p><strong>Active Sensors:</strong> Thermal Imaging, Humidity Sensors, Wind Patterns</p>
+        <p><strong>Data Refresh:</strong> Every 30 seconds</p>
+        <p><strong>AI Analysis:</strong> Real-time pattern recognition for early fire detection</p>
         
-        if st.button("🛑 STOP RAIN SYSTEM", use_container_width=True):
-            st.session_state.rain_activated = False
-            st.session_state.temperature = 41.5
-            st.session_state.humidity = 18
-            st.rerun()
-    else:
-        if st.button("🌧️ ACTIVATE ARTIFICIAL RAIN", use_container_width=True):
-            st.session_state.rain_activated = True
-            st.success("✅ Artificial rain system activated! Deploying cloud seeding drones...")
-            st.rerun()
+        <div style="background: rgba(0,255,135,0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+            <h4>🌡️ ENVIRONMENTAL CONDITIONS</h4>
+            <p>• Surface Temperature: 42.5°C (Critical)</p>
+            <p>• Air Quality Index: 156 (Unhealthy)</p>
+            <p>• Wind Speed: 18 km/h (Spreading risk)</p>
+            <p>• Vegetation Dryness: 87% (Extreme fire hazard)</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("""
-    **SYSTEM CAPABILITIES:**
-    • Cloud Seeding Drones
-    • Temperature Reduction: Up to 8°C
-    • Humidity Increase: Up to 35%
-    • Fire Risk Reduction: 45-60%
-    """)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-with rain_col2:
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("### 📊 RAIN SYSTEM STATUS")
-    
-    status = "🟢 ACTIVE" if st.session_state.rain_activated else "🔴 STANDBY"
-    st.metric("System Status", status)
-    
-    if st.session_state.rain_activated:
-        st.metric("Drones Deployed", "12", "4 en route")
-        st.metric("Cloud Coverage", "78%", "+12%")
-        st.progress(0.78)
-    else:
-        st.metric("Drones Ready", "16", "All systems")
-        st.metric("Cloud Coverage", "22%", "Natural")
-        st.progress(0.22)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# CRITICAL THREAT MATRIX - ULTIMATE VERSION
-st.markdown("---")
-st.markdown("## 🚨 QUANTUM THREAT MATRIX")
-
-threat_col1, threat_col2 = st.columns(2)
-
-with threat_col1:
-    st.markdown('<div class="critical-hologram">', unsafe_allow_html=True)
-    st.markdown("### 🔥 CRITICAL: BANDIPUR NATIONAL PARK")
-    st.markdown("**QUANTUM THREAT LEVEL:** ⚡ MAXIMUM ⚡")
-    st.markdown("**AI CONFIDENCE:** 99.2%")
-    st.markdown("**PREDICTED IGNITION:** 1-3 HOURS")
-    st.markdown(f"**TEMPERATURE:** {st.session_state.temperature:.1f}°C 🔥")
-    st.markdown(f"**HUMIDITY:** {st.session_state.humidity:.1f}% 💨")
-    
-    # Emergency Action Grid
-    action_col1, action_col2 = st.columns(2)
-    with action_col1:
-        if st.button("🛸 DEPLOY DRONE FLEET", use_container_width=True, key="drone_btn"):
-            st.session_state.deployed_drones += 12
-            st.success(f"🚁 12 Quantum Drones Deployed! Total: {st.session_state.deployed_drones}")
+    <div class="cyber-card">
+        <h2>🤖 NEURAL NETWORK ANALYSIS</h2>
+        <p><strong>AI Model:</strong> Deep Learning Convolutional Neural Network</p>
+        <p><strong>Training Data:</strong> 50,000+ historical fire incidents</p>
+        <p><strong>Accuracy:</strong> 98.7% in fire prediction</p>
+        <p><strong>Processing Speed:</strong> 15 TB satellite data per hour</p>
         
-        if st.button("📡 ALERT ALL AGENCIES", use_container_width=True, key="alert_btn"):
-            st.success("✅ All 28 Agencies Notified! National Alert Activated!")
-    
-    with action_col2:
-        if st.button("🚒 DEPLOY FIRE TEAMS", use_container_width=True, key="fire_btn"):
-            st.success("🔥 8 Fire Teams Mobilized! ETA: 12 minutes")
+        <div style="background: rgba(0,212,255,0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+            <h4>🧠 AI CONFIDENCE METRICS</h4>
+            <p>• Pattern Recognition: 96% match with fire precursors</p>
+            <p>• Thermal Anomaly Detection: 94% confidence</p>
+            <p>• Smoke Plume Analysis: 89% probability</p>
+            <p>• Weather Correlation: 92% risk alignment</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="cyber-card">
+        <h2>🚀 EMERGENCY RESPONSE SYSTEM</h2>
+        <p><strong>Response Time:</strong> 8-12 minutes from detection to deployment</p>
+        <p><strong>Resources Available:</strong> 45 fire stations, 12 drone fleets, 8 helicopters</p>
+        <p><strong>Evacuation Protocol:</strong> 25,000+ residents in alert zones</p>
+        <p><strong>Coordination:</strong> Integrated with National Disaster Response Force</p>
         
-        if st.button("📢 INITIATE EVACUATION", use_container_width=True, key="evac_btn"):
-            st.session_state.evacuation_status = "ACTIVE"
-            st.error("🚨 EVACUATION PROTOCOL ACTIVATED! 5,234 civilians notified!")
+        <div style="background: rgba(255,65,108,0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+            <h4>🆘 IMMEDIATE ACTIONS</h4>
+            <p>• 🔥 12 Fire engines dispatched to Bandipur sector</p>
+            <p>• 🛸 8 Surveillance drones monitoring thermal activity</p>
+            <p>• 🚁 2 Helicopters equipped with water bombing</p>
+            <p>• 📢 Emergency alerts sent to 5,234 mobile devices</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="cyber-card">
+        <h2>🌧️ CLIMATE CONTROL SYSTEM</h2>
+        <p><strong>Technology:</strong> Cloud Seeding & Atmospheric Modification</p>
+        <p><strong>Coverage:</strong> 200 sq km weather influence radius</p>
+        <p><strong>Success Rate:</strong> 78% in artificial rain generation</p>
+        <p><strong>Environmental Impact:</strong> Zero chemical residue</p>
+        
+        <div style="background: rgba(102,126,234,0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+            <h4>💧 WEATHER MODIFICATION STATUS</h4>
+            <p>• Cloud Seeding Drones: 12 active</p>
+            <p>• Atmospheric Humidity: Increasing by 3% per hour</p>
+            <p>• Temperature Reduction: Target -8°C within 4 hours</p>
+            <p>• Rain Probability: 65% within next 3 hours</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-with threat_col2:
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("### 🌡️ QUANTUM ENVIRONMENT SENSORS")
-    
-    # NEW ARTIFICIAL RAIN BUTTON
-    if st.button("🌧️ QUICK RAIN DEPLOYMENT", use_container_width=True, key="quick_rain"):
-        st.session_state.rain_activated = True
-        st.session_state.temperature = 36.0
-        st.session_state.humidity = 45
-        st.success("🚁 Emergency rain drones deployed! Immediate climate modification activated!")
-        st.rerun()
-    
-    # Real-time Environmental Gauges
-    gauge_col1, gauge_col2 = st.columns(2)
-    
-    with gauge_col1:
-        # Temperature Gauge
-        fig_temp = go.Figure(go.Indicator(
-            mode = "gauge+number+delta",
-            value = st.session_state.temperature,
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "TEMPERATURE °C", 'font': {'color': 'white', 'size': 16}},
-            delta = {'reference': 35, 'increasing': {'color': "red"}},
-            gauge = {
-                'axis': {'range': [20, 50], 'tickwidth': 2, 'tickcolor': "white"},
-                'bar': {'color': "red"},
-                'bgcolor': "rgba(0,0,0,0)",
-                'borderwidth': 2,
-                'bordercolor': "white",
-                'steps': [
-                    {'range': [20, 30], 'color': 'green'},
-                    {'range': [30, 40], 'color': 'orange'},
-                    {'range': [40, 50], 'color': 'red'}
-                ],
-            }
-        ))
-        fig_temp.update_layout(height=250, paper_bgcolor='rgba(0,0,0,0)', font={'color': "white"})
-        st.plotly_chart(fig_temp, use_container_width=True)
-    
-    with gauge_col2:
-        # Humidity Gauge
-        fig_humidity = go.Figure(go.Indicator(
-            mode = "gauge+number+delta",
-            value = st.session_state.humidity,
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "HUMIDITY %", 'font': {'color': 'white', 'size': 16}},
-            delta = {'reference': 40, 'decreasing': {'color': "red"}},
-            gauge = {
-                'axis': {'range': [0, 100], 'tickwidth': 2, 'tickcolor': "white"},
-                'bar': {'color': "lightblue"},
-                'bgcolor': "rgba(0,0,0,0)",
-                'borderwidth': 2,
-                'bordercolor': "white",
-                'steps': [
-                    {'range': [0, 30], 'color': 'red'},
-                    {'range': [30, 60], 'color': 'orange'},
-                    {'range': [60, 100], 'color': 'green'}
-                ],
-            }
-        ))
-        fig_humidity.update_layout(height=250, paper_bgcolor='rgba(0,0,0,0)', font={'color': "white"})
-        st.plotly_chart(fig_humidity, use_container_width=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# QUANTUM NEURAL NETWORK VISUALIZATION
-st.markdown("---")
-st.markdown("## 🧠 QUANTUM NEURAL ACTIVATION MATRIX")
-
-# Create dynamic neural network
-def create_quantum_neural_network():
-    # Generate random neural activations
-    layers = [8, 12, 16, 12, 8, 4, 1]  # Neural network architecture
-    
-    fig = go.Figure()
-    
-    # Create neural nodes
-    node_x = []
-    node_y = []
-    node_colors = []
-    node_sizes = []
-    
-    for layer_idx, nodes_in_layer in enumerate(layers):
-        for node_idx in range(nodes_in_layer):
-            x = layer_idx
-            y = node_idx - (nodes_in_layer - 1) / 2
-            activation = random.random()
-            
-            node_x.append(x)
-            node_y.append(y)
-            node_sizes.append(15 + activation * 25)
-            node_colors.append(activation)
-    
-    # Add nodes to plot
-    fig.add_trace(go.Scatter(
-        x=node_x, y=node_y,
-        mode='markers',
-        marker=dict(
-            size=node_sizes,
-            color=node_colors,
-            colorscale='Hot',
-            showscale=True,
-            colorbar=dict(title="Activation"),
-            line=dict(width=2, color='white')
-        ),
-        name="Neurons"
-    ))
-    
-    # Add connections
-    for i in range(len(layers)-1):
-        for j in range(layers[i]):
-            for k in range(layers[i+1]):
-                if random.random() > 0.7:  # Random connections
-                    fig.add_trace(go.Scatter(
-                        x=[i, i+1],
-                        y=[j - (layers[i]-1)/2, k - (layers[i+1]-1)/2],
-                        mode='lines',
-                        line=dict(width=1, color='rgba(0,255,255,0.3)'),
-                        showlegend=False
-                    ))
-    
-    fig.update_layout(
-        title="QUANTUM NEURAL NETWORK - REAL-TIME FIRE PREDICTION",
-        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-        font=dict(color='white'),
-        height=400,
-        showlegend=False
-    )
-    
-    return fig
-
-st.plotly_chart(create_quantum_neural_network(), use_container_width=True)
-
-# QUANTUM SATELLITE FEED
-st.markdown("---")
-st.markdown("## 🛰️ QUANTUM SATELLITE ARRAY")
-
-sat_col1, sat_col2 = st.columns(2)
-
-with sat_col1:
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("### 🔥 THERMAL ANOMALY DETECTION")
-    
-    # Dynamic thermal map
-    thermal_data = np.random.rand(15, 15) * 50 + 20
-    fig_thermal = px.imshow(thermal_data, 
-                          color_continuous_scale='hot',
-                          title="REAL-TIME THERMAL IMAGING")
-    fig_thermal.update_layout(coloraxis_showscale=True)
-    st.plotly_chart(fig_thermal, use_container_width=True)
-    
-    if st.button("🎯 FOCUS SATELLITE 7A", use_container_width=True, key="satellite_btn"):
-        st.success("🛰️ Satellite 7A focused on Bandipur region - Enhancing resolution...")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-with sat_col2:
-    st.markdown('<div class="hologram-card">', unsafe_allow_html=True)
-    st.markdown("### 🌪️ ATMOSPHERIC ANALYSIS")
-    
-    # Dynamic weather radar
-    radar_data = np.random.rand(20, 20)
-    fig_radar = px.imshow(radar_data,
-                         color_continuous_scale='blues',
-                         title="WIND PATTERNS & AIR QUALITY")
-    st.plotly_chart(fig_radar, use_container_width=True)
-    
-    if st.button("📊 ANALYZE WEATHER DATA", use_container_width=True, key="weather_btn"):
-        st.info("🌪️ Analysis complete: High winds detected NW sector - Fire spread risk: HIGH")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# QUANTUM PREDICTION ENGINE
-st.markdown("---")
-st.markdown("## ⚡ QUANTUM PREDICTION ENGINE")
-
-# Real-time prediction timeline
-timeline_data = pd.DataFrame({
-    'Time': ['NOW', '+30M', '+1H', '+2H', '+3H', '+4H', '+5H'],
-    'Risk': [20, 45, 70, 88, 94, 96, 98],
-    'Action': ['Monitor', 'Alert', 'Prepare', 'Deploy', 'Evacuate', 'Critical', 'Emergency']
-})
-
-fig_timeline = px.line(timeline_data, x='Time', y='Risk', 
-                      markers=True, line_shape='spline',
-                      title="QUANTUM FIRE RISK PREDICTION TIMELINE")
-fig_timeline.update_traces(line=dict(color='#FF00FF', width=5))
-fig_timeline.add_hrect(y0=80, y1=100, line_width=0, fillcolor="red", opacity=0.3)
-fig_timeline.add_hrect(y0=50, y1=80, line_width=0, fillcolor="orange", opacity=0.3)
-fig_timeline.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font=dict(color='white'))
-
-st.plotly_chart(fig_timeline, use_container_width=True)
-
-# QUANTUM EMERGENCY RESPONSE SYSTEM
-st.markdown("---")
-st.markdown("## 🚒 QUANTUM EMERGENCY RESPONSE")
-
-response_col1, response_col2, response_col3, response_col4 = st.columns(4)
-
-with response_col1:
-    if st.button("🔄 PROTOCOL ALPHA", use_container_width=True, key="alpha_btn"):
-        st.session_state.system_status = "ALPHA ACTIVE"
-        st.success("""
-        ✅ Protocol Alpha Activated:
-        • Enhanced Monitoring
-        • Drone Surveillance
-        • Satellite Focus
-        """)
-
-with response_col2:
-    if st.button("🚁 PROTOCOL BETA", use_container_width=True, key="beta_btn"):
-        st.session_state.system_status = "BETA ACTIVE"
-        st.warning("""
-        ⚠️ Protocol Beta Activated:
-        • Helicopter Dispatch
-        • Ground Teams Ready
-        • Evacuation Prep
-        """)
-
-with response_col3:
-    if st.button("🔥 PROTOCOL GAMMA", use_container_width=True, key="gamma_btn"):
-        st.session_state.system_status = "GAMMA ACTIVE"
-        st.error("""
-        🚨 Protocol Gamma Activated:
-        • Full Resource Deployment
-        • National Alert
-        • Emergency Services
-        """)
-
-with response_col4:
-    if st.button("💀 PROTOCOL OMEGA", use_container_width=True, key="omega_btn"):
-        st.session_state.system_status = "OMEGA CRITICAL"
-        st.error("""
-        ⚡💀 PROTOCOL OMEGA ACTIVATED:
-        • MAXIMUM RESPONSE
-        • MASS EVACUATION
-        • ALL SYSTEMS ENGAGED
-        • NATIONAL EMERGENCY
-        """)
-
-# SYSTEM STATUS DISPLAY
-st.markdown(f"### 🖥️ CURRENT SYSTEM STATUS: **{st.session_state.system_status}**")
-
-# ULTIMATE FOOTER
-st.markdown("---")
-footer_col1, footer_col2, footer_col3 = st.columns(3)
-
-with footer_col1:
-    st.markdown("### 🔗 QUANTUM LINKS")
-    st.write("📊 **Quantum Dashboard**")
-    st.write("🛰️ **Satellite Network**")
-    st.write("🤖 **AI Command**")
-    st.write("📡 **Sensor Grid**")
-
-with footer_col2:
-    st.markdown("### 🚨 EMERGENCY CONTACTS")
-    st.write("🚒 **Fire Command:** 101")
-    st.write("🏥 **Rescue Ops:** 108")
-    st.write("🌲 **Forest HQ:** 1800-ECOGUARD")
-    st.write("🚁 **Air Support:** 1800-AIRRESCUE")
-
-with footer_col3:
-    st.markdown("### ⚡ SYSTEM VERSION")
-    st.write("**QuantumCore:** v4.2.1")
-    st.write(f"**Drones Active:** {st.session_state.deployed_drones}")
-    st.write(f"**Evacuation:** {st.session_state.evacuation_status}")
-    st.write("**Status:** 🟢 QUANTUM OPERATIONAL")
-
-# FINAL ULTIMATE FOOTER
-st.markdown("---")
+# Interactive Control Panel
 st.markdown("""
-<div style='text-align: center; font-family: "Exo 2", sans-serif;'>
-    <h3 style='background: linear-gradient(90deg, #00FFFF, #FF00FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>
-        🚀 ECOGUARDIAN QUANTUM AI v2.0
-    </h3>
-    <p style='color: #888; letter-spacing: 2px;'>ADVANCED FOREST PROTECTION SYSTEM</p>
-    <p style='color: #666; font-size: 0.8rem;'>© 2025 EcoGuardian Quantum Systems | Neural Network v4.2.1 | All Systems Operational</p>
+<div class="cyber-card">
+    <h2>🎮 MANUAL OVERRIDE CONTROL PANEL</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+        <div style="background: rgba(0,255,135,0.2); padding: 1rem; border-radius: 10px; text-align: center;">
+            <h4>🛸 DRONE FLEET CONTROL</h4>
+            <p>Active: 12/16 drones</p>
+            <p>Battery: 78% average</p>
+            <button style="background: #00FF87; color: black; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">DEPLOY ALL</button>
+        </div>
+        
+        <div style="background: rgba(0,212,255,0.2); padding: 1rem; border-radius: 10px; text-align: center;">
+            <h4>🌧️ RAIN GENERATION</h4>
+            <p>System: READY</p>
+            <p>Cloud Cover: 45%</p>
+            <button style="background: #00D4FF; color: black; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">ACTIVATE</button>
+        </div>
+        
+        <div style="background: rgba(255,65,108,0.2); padding: 1rem; border-radius: 10px; text-align: center;">
+            <h4>🚨 EMERGENCY ALERTS</h4>
+            <p>Zones: 8 affected</p>
+            <p>Population: 25K+</p>
+            <button style="background: #FF416C; color: white; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">BROADCAST</button>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Real-time Data Visualization
+st.markdown("""
+<div class="cyber-card">
+    <h2>📊 REAL-TIME FOREST ANALYTICS</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+            <h4>🔥 FIRE RISK DISTRIBUTION</h4>
+            <p>• Bandipur: 94% (CRITICAL)</p>
+            <p>• Sundarbans: 78% (HIGH)</p>
+            <p>• Kaziranga: 45% (MEDIUM)</p>
+            <p>• Gir Forest: 25% (LOW)</p>
+            <p>• Corbett: 35% (LOW)</p>
+        </div>
+        
+        <div>
+            <h4>🛰️ SATELLITE COVERAGE</h4>
+            <p>• NASA MODIS: ACTIVE</p>
+            <p>• ESA Sentinel: ACTIVE</p>
+            <p>• ISRO Resourcesat: ACTIVE</p>
+            <p>• Commercial Imaging: 6/8 ACTIVE</p>
+            <p>• Weather Satellites: 3/3 ACTIVE</p>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Footer
+st.markdown("""
+<div style="text-align: center; color: #00D4FF; margin-top: 3rem;">
+    <h3>🌲 PROTECTING OUR FORESTS WITH ARTIFICIAL INTELLIGENCE</h3>
+    <p><strong>EcoGuardian AI Pro System</strong> | Neural Network v4.2 | Real-time Monitoring | 24/7 Protection</p>
+    <p style="color: #666;">© 2024 EcoGuardian AI Systems | Saving forests one algorithm at a time</p>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
-
-# Show refresh info
-st.sidebar.markdown(f"**🔄 Refresh Count:** {st.session_state.refresh_counter}")
-st.sidebar.markdown("**⏰ Next auto-refresh:** 30 seconds")
